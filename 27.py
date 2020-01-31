@@ -11,6 +11,7 @@ running = True
 clock = pygame.time.Clock()
 pygame.mixer.music.load("menuuu.mp3")
 pygame.mixer.music.play(-1)
+clock = pygame.time.Clock()
 
 def terminate():
     pygame.quit()
@@ -81,6 +82,32 @@ def start_screen2():
         clock.tick(FPS)
 
 
+def start_screen3():
+    intro_text = []
+    pygame.mixer.music.load("gameover.mp3")
+    pygame.mixer.music.play(-1)
+
+    fon = pygame.transform.scale(load_image('fon3.png'), (width, height))
+    screen.blit(fon, (0, 0))
+    font = pygame.font.Font(None, 30)
+    text_coord = 50
+    for line in intro_text:
+        string_rendered = font.render(line, 1, pygame.Color('black'))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = 10
+        text_coord += intro_rect.height
+        screen.blit(string_rendered, intro_rect)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT or event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+                terminate()
+        pygame.display.flip()
+        clock.tick(FPS)
+
+
 def load_level(filename):
     filename = "data/" + filename
     # читаем уровень, убирая символы перевода строки
@@ -96,7 +123,7 @@ def load_level(filename):
 
 
 tile_images = {'wall': load_image('box.png'), 'empty': load_image('grass.png'), 'portal': load_image('portal.png'),
-               'lava': load_image('lava.jpg'), 'money': load_image('money.jpg'), 'portal2': load_image('portal2.png'),
+               'lava': load_image('lava.jpg'), 'piki': load_image('piki.png'), 'portal2': load_image('portal2.png'),
                'portal3': load_image('portal3.png'), 'portal4': load_image('portal4.png')}
 player_image = load_image('mario.png')
 # основной персонаж
@@ -106,7 +133,7 @@ all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
 walls_group = pygame.sprite.Group()
-money_group = pygame.sprite.Group()
+piki_group = pygame.sprite.Group()
 portal_group = pygame.sprite.GroupSingle()
 portal2_group = pygame.sprite.GroupSingle()
 portal3_group = pygame.sprite.GroupSingle()
@@ -148,8 +175,8 @@ class Tile(pygame.sprite.Sprite):
             self.add(portal3_group)
         if tile_type == 'portal4':
             self.add(portal4_group)
-        if tile_type == 'money':
-            self.add(money_group)
+        if tile_type == 'piki':
+            self.add(piki_group)
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
@@ -182,6 +209,8 @@ def generate_level(level):
                 Tile('portal', x, y)
             elif level[y][x] == '=':
                 Tile('lava', x, y)
+            elif level[y][x] == '-':
+                Tile('piki', x, y)
     # вернем игрока, а также размер поля в клетках
     new_player = Player(xx, yy)
     return new_player, x, y
@@ -203,6 +232,8 @@ def generate_level2(level):
                 Tile('portal2', x, y)
             elif level[y][x] == '=':
                 Tile('lava', x, y)
+            elif level[y][x] == '-':
+                Tile('piki', x, y)
     # вернем игрока, а также размер поля в клетках
     new_player = Player(xx, yy)
     return new_player, x, y
@@ -226,6 +257,8 @@ def generate_level3(level):
                 Tile('lava', x, y)
             elif level[y][x] == '&':
                 Tile('portal4', x, y)
+            elif level[y][x] == '-':
+                Tile('piki', x, y)
     # вернем игрока, а также размер поля в клетках
     new_player = Player(xx, yy)
     return new_player, x, y
@@ -245,6 +278,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN:
+
 
             if event.key == pygame.K_LEFT:
                 player.move(-1, 0)
@@ -291,6 +325,12 @@ while running:
         running = True
         pygame.mixer.music.load("undertale.mp3")
         pygame.mixer.music.play(-1)
+
+
+    if pygame.sprite.spritecollideany(player, piki_group):
+        for sprite in all_sprites:
+            sprite.kill()
+        start_screen3()
 
 
     if pygame.sprite.spritecollideany(player, portal_group):
