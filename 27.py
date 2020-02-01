@@ -192,6 +192,10 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect().move(tile_width * pos_x + 15, tile_height * pos_y + 5)
 
 
+    def update(self):
+        self.image = player_image
+
+
 
     def move(self, x, y):
         self.rect = self.image.get_rect().move(self.rect.x + x * tile_width, tile_height * y + self.rect.y)
@@ -319,6 +323,7 @@ while running:
 
             if event.key == pygame.K_LEFT:
                 player_image = load_image('mario2.png')
+                player.update()
                 player.move(-1, 0)
                 if pygame.sprite.spritecollideany(player, walls_group):
                     player.move(1, 0)
@@ -329,6 +334,7 @@ while running:
                     camera.apply(sprite)
             elif event.key == pygame.K_RIGHT:
                 player_image = load_image('mario3.png')
+                player.update()
                 player.move(1, 0)
                 if pygame.sprite.spritecollideany(player, walls_group):
                     player.move(-1, 0)
@@ -339,6 +345,7 @@ while running:
                     camera.apply(sprite)
             elif event.key == pygame.K_DOWN:
                 player_image = load_image('mario.png')
+                player.update()
                 player.move(0, 1)
                 if pygame.sprite.spritecollideany(player, walls_group):
                     player.move(0, -1)
@@ -349,6 +356,7 @@ while running:
                     camera.apply(sprite)
             elif event.key == pygame.K_UP:
                 player_image = load_image('mario6.png')
+                player.update()
                 player.move(0, -1)
                 if pygame.sprite.spritecollideany(player, walls_group):
                     player.move(0, 1)
