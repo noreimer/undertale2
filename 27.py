@@ -124,7 +124,8 @@ def load_level(filename):
 
 tile_images = {'wall': load_image('box.png'), 'empty': load_image('grass.png'), 'portal': load_image('portal.png'),
                'lava': load_image('lava.jpg'), 'piki': load_image('piki.png'), 'portal2': load_image('portal2.png'),
-               'portal3': load_image('portal3.png'), 'portal4': load_image('portal4.png')}
+               'portal3': load_image('portal3.png'), 'portal4': load_image('portal4.png'),
+               'door': load_image('door.png'), 'dor': load_image('dor.png')}
 player_image = load_image('mario.png')
 # основной персонаж
 player = None
@@ -138,6 +139,8 @@ portal_group = pygame.sprite.GroupSingle()
 portal2_group = pygame.sprite.GroupSingle()
 portal3_group = pygame.sprite.GroupSingle()
 portal4_group = pygame.sprite.GroupSingle()
+door_group = pygame.sprite.GroupSingle()
+dor_group = pygame.sprite.GroupSingle()
 lava_group = pygame.sprite.Group()
 tile_width = tile_height = 50
 
@@ -177,6 +180,10 @@ class Tile(pygame.sprite.Sprite):
             self.add(portal4_group)
         if tile_type == 'piki':
             self.add(piki_group)
+        if tile_type == 'door':
+            self.add(door_group)
+        if tile_type == 'dor':
+            self.add(dor_group)
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
@@ -211,6 +218,8 @@ def generate_level(level):
                 Tile('lava', x, y)
             elif level[y][x] == '-':
                 Tile('piki', x, y)
+            elif level[y][x] == '!':
+                Tile('door', x, y)
     # вернем игрока, а также размер поля в клетках
     new_player = Player(xx, yy)
     return new_player, x, y
@@ -234,6 +243,8 @@ def generate_level2(level):
                 Tile('lava', x, y)
             elif level[y][x] == '-':
                 Tile('piki', x, y)
+            elif level[y][x] == '!':
+                Tile('door', x, y)
     # вернем игрока, а также размер поля в клетках
     new_player = Player(xx, yy)
     return new_player, x, y
@@ -263,12 +274,38 @@ def generate_level3(level):
     new_player = Player(xx, yy)
     return new_player, x, y
 
+
+def generate_level4(level):
+    new_player, x, y = None, None, None
+    for y in range(len(level)):
+        for x in range(len(level[y])):
+            if level[y][x] == '.':
+                Tile('empty', x, y)
+            elif level[y][x] == '#':
+                Tile('wall', x, y)
+            elif level[y][x] == '@':
+                Tile('empty', x, y)
+                xx = x
+                yy = y
+            elif level[y][x] == '*':
+                Tile('portal3', x, y)
+            elif level[y][x] == '=':
+                Tile('lava', x, y)
+            elif level[y][x] == '&':
+                Tile('portal4', x, y)
+            elif level[y][x] == '-':
+                Tile('piki', x, y)
+    # вернем игрока, а также размер поля в клетках
+    new_player = Player(xx, yy)
+    return new_player, x, y
+
 player, level_x, level_y = generate_level(load_level('map.txt'))
 camera = Camera()
 start_screen()
 running = True
 pygame.mixer.music.load("shop.mp3")
 pygame.mixer.music.play(-1)
+camera.update(player)
 
 
 while running:
@@ -281,6 +318,7 @@ while running:
 
 
             if event.key == pygame.K_LEFT:
+                player_image = load_image('mario2.png')
                 player.move(-1, 0)
                 if pygame.sprite.spritecollideany(player, walls_group):
                     player.move(1, 0)
@@ -290,6 +328,7 @@ while running:
                 for sprite in all_sprites:
                     camera.apply(sprite)
             elif event.key == pygame.K_RIGHT:
+                player_image = load_image('mario3.png')
                 player.move(1, 0)
                 if pygame.sprite.spritecollideany(player, walls_group):
                     player.move(-1, 0)
@@ -299,6 +338,7 @@ while running:
                 for sprite in all_sprites:
                     camera.apply(sprite)
             elif event.key == pygame.K_DOWN:
+                player_image = load_image('mario.png')
                 player.move(0, 1)
                 if pygame.sprite.spritecollideany(player, walls_group):
                     player.move(0, -1)
@@ -308,6 +348,7 @@ while running:
                 for sprite in all_sprites:
                     camera.apply(sprite)
             elif event.key == pygame.K_UP:
+                player_image = load_image('mario6.png')
                 player.move(0, -1)
                 if pygame.sprite.spritecollideany(player, walls_group):
                     player.move(0, 1)
@@ -347,6 +388,32 @@ while running:
         for sprite in all_sprites:
             sprite.kill()
         start_screen2()
+
+
+    if pygame.sprite.spritecollideany(player, door_group):
+        for sprite in all_sprites:
+            sprite.kill()
+
+        player, level_x, level_y = generate_level4(load_level('room.txt'))
+        camera = Camera()
+        running = True
+
+        pygame.mixer.music.load("sans.mp3")
+        pygame.mixer.music.play(-1)
+
+
+
+    if pygame.sprite.spritecollideany(player, dor_group):
+        for sprite in all_sprites:
+            sprite.kill()
+
+        player, level_x, level_y = generate_level4(load_level('map.txt'))
+        camera = Camera()
+        running = True
+
+        pygame.mixer.music.load("me.mp3")
+        pygame.mixer.music.play(-1)
+
 
 
     screen.fill((0, 0, 0))
