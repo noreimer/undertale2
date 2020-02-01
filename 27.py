@@ -125,7 +125,7 @@ def load_level(filename):
 tile_images = {'wall': load_image('box.png'), 'empty': load_image('grass.png'), 'portal': load_image('portal.png'),
                'lava': load_image('lava.jpg'), 'piki': load_image('piki.png'), 'portal2': load_image('portal2.png'),
                'portal3': load_image('portal3.png'), 'portal4': load_image('portal4.png'),
-               'door': load_image('door.png'), 'dor': load_image('dor.png')}
+               'door': load_image('door.png'), 'dor': load_image('dor.png'), 'hren': load_image('hren.png')}
 player_image = load_image('mario.png')
 # основной персонаж
 player = None
@@ -141,6 +141,7 @@ portal3_group = pygame.sprite.GroupSingle()
 portal4_group = pygame.sprite.GroupSingle()
 door_group = pygame.sprite.GroupSingle()
 dor_group = pygame.sprite.GroupSingle()
+hren_group = pygame.sprite.GroupSingle()
 lava_group = pygame.sprite.Group()
 tile_width = tile_height = 50
 
@@ -184,6 +185,8 @@ class Tile(pygame.sprite.Sprite):
             self.add(door_group)
         if tile_type == 'dor':
             self.add(dor_group)
+        if tile_type == 'hren':
+            self.add(hren_group)
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
@@ -299,6 +302,8 @@ def generate_level4(level):
                 Tile('portal4', x, y)
             elif level[y][x] == '-':
                 Tile('piki', x, y)
+            elif level[y][x] == '?':
+                Tile('hren', x, y)
     # вернем игрока, а также размер поля в клетках
     new_player = Player(xx, yy)
     return new_player, x, y
@@ -396,6 +401,10 @@ while running:
         for sprite in all_sprites:
             sprite.kill()
         start_screen2()
+
+
+    if pygame.sprite.spritecollideany(player, hren_group):
+        hren_group
 
 
     if pygame.sprite.spritecollideany(player, door_group):
