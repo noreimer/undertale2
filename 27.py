@@ -30,6 +30,7 @@ def load_image(name, colorkey=None):
     return image
 
 
+
 def start_screen():
     intro_text = []
 
@@ -304,6 +305,8 @@ def generate_level4(level):
                 Tile('piki', x, y)
             elif level[y][x] == '?':
                 Tile('hren', x, y)
+            elif level[y][x] == '!':
+                Tile('dor', x, y)
     # вернем игрока, а также размер поля в клетках
     new_player = Player(xx, yy)
     return new_player, x, y
@@ -312,7 +315,7 @@ player, level_x, level_y = generate_level(load_level('map.txt'))
 camera = Camera()
 start_screen()
 running = True
-pygame.mixer.music.load("shop.mp3")
+pygame.mixer.music.load("heh.mp3")
 pygame.mixer.music.play(-1)
 camera.update(player)
 
@@ -428,7 +431,7 @@ while running:
         camera = Camera()
         running = True
 
-        pygame.mixer.music.load("me.mp3")
+        pygame.mixer.music.load("heh.mp3")
         pygame.mixer.music.play(-1)
 
 
