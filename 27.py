@@ -178,7 +178,8 @@ tile_images = {'wall': load_image('box.png'), 'empty': load_image('grass.png'), 
                'portal3': load_image('portal3.png'), 'door': load_image('door.png'), 'dor': load_image('dor.png'),
                'door2': load_image('door2.png'), 'dor2': load_image('dor2.png'), 'door3': load_image('door3.png'),
                'dor3': load_image('dor3.png'), 'tabl2': load_image('tabl2.png'), 'tabl3': load_image('tabl3.png'),
-               'wall2': load_image('box2.png'), 'wall3': load_image('box3.png'), 'tabl': load_image('tabl.png'),}
+               'wall2': load_image('box2.png'), 'wall3': load_image('box3.png'), 'tabl': load_image('tabl.png'),
+               'piki2': load_image('piki2.png'), 'piki3': load_image('piki3.png'),}
 player_image = load_image('mario.png')
 # основной персонаж
 player = None
@@ -240,6 +241,10 @@ class Tile(pygame.sprite.Sprite):
         if tile_type == 'portal3':
             self.add(portal3_group)
         if tile_type == 'piki':
+            self.add(piki_group)
+        if tile_type == 'piki2':
+            self.add(piki_group)
+        if tile_type == 'piki3':
             self.add(piki_group)
         if tile_type == 'door':
             self.add(door_group)
@@ -324,7 +329,7 @@ def generate_level2(level):
             elif level[y][x] == '=':
                 Tile('lava', x, y)
             elif level[y][x] == '-':
-                Tile('piki', x, y)
+                Tile('piki2', x, y)
             elif level[y][x] == '!':
                 Tile('door2', x, y)
             elif level[y][x] == '?':
@@ -352,7 +357,7 @@ def generate_level3(level):
             elif level[y][x] == '=':
                 Tile('lava', x, y)
             elif level[y][x] == '-':
-                Tile('piki', x, y)
+                Tile('piki3', x, y)
             elif level[y][x] == '?':
                 Tile('empty', x, y)
                 Tile('tabl3', x, y)
@@ -407,7 +412,7 @@ def generate_level5(level):
             elif level[y][x] == '=':
                 Tile('lava', x, y)
             elif level[y][x] == '-':
-                Tile('piki', x, y)
+                Tile('piki2', x, y)
             elif level[y][x] == '?':
                 Tile('empty', x, y)
                 Tile('tabl2', x, y)
@@ -435,7 +440,7 @@ def generate_level6(level):
             elif level[y][x] == '=':
                 Tile('lava', x, y)
             elif level[y][x] == '-':
-                Tile('piki', x, y)
+                Tile('piki3', x, y)
             elif level[y][x] == '?':
                 Tile('empty', x, y)
                 Tile('tabl3', x, y)
